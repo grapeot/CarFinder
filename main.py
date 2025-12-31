@@ -51,6 +51,23 @@ class FeedbackRequest(BaseModel):
 
 # --- Helper Functions ---
 
+async def retry_with_backoff(func, *args, max_retries=3, initial_delay=2, **kwargs):
+    """Retries an async function with exponential backoff on 503 errors."""
+    delay = initial_delay
+    for i in range(max_retries):
+        try:
+            return await asyncio.to_thread(func, *args, **kwargs)
+        except Exception as e:
+            err_str = str(e).lower()
+            if "503" in err_str or "overloaded" in err_str or "unavailable" in err_str:
+                if i == max_retries - 1:
+                    raise e
+                print(f"Model overloaded, retrying in {delay}s... (Attempt {i+1}/{max_retries})")
+                await asyncio.sleep(delay)
+                delay *= 2
+            else:
+                raise e
+
 async def cleanup_images():
     """Removes oldest images if count exceeds MAX_IMAGE_COUNT."""
     files = [os.path.join(IMAGE_DIR, f) for f in os.listdir(IMAGE_DIR) if os.path.isfile(os.path.join(IMAGE_DIR, f))]
@@ -109,8 +126,8 @@ async def generate_images_task(task_id: str, feedback: str, state: dict):
         }}
         """
         
-        # Use Gemini 3 Flash with thinking and search
-        response = await asyncio.to_thread(
+        # Use retry with backoff for planning
+        response = await retry_with_backoff(
             client.models.generate_content,
             model="gemini-3-flash-preview",
             contents=prompt,
@@ -131,7 +148,8 @@ async def generate_images_task(task_id: str, feedback: str, state: dict):
 
         async def generate_single_image(index, item):
             full_prompt = f"{base_visual_prompt} Design: {item['prompt']}"
-            img_response = await asyncio.to_thread(
+            # Use retry with backoff for image generation
+            img_response = await retry_with_backoff(
                 client.models.generate_content,
                 model="gemini-2.5-flash-image",
                 contents=full_prompt,
