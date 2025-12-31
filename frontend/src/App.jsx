@@ -117,8 +117,7 @@ const App = () => {
         <div className="logo">DREAM CAR<span>FINDER</span></div>
         <div style={{ display: 'flex', gap: '15px' }}>
           <button
-            className="tag"
-            style={{ cursor: 'pointer', borderColor: 'var(--accent)' }}
+            className="btn-new-session"
             onClick={() => {
               if (window.confirm("Start a new session? This will clear all history and genome data.")) {
                 setHistory([]);
@@ -131,7 +130,7 @@ const App = () => {
               }
             }}
           >
-            <RotateCcw size={14} style={{ marginRight: '5px', verticalAlign: 'middle' }} />
+            <RotateCcw size={14} style={{ marginRight: '8px' }} />
             New Session
           </button>
         </div>
