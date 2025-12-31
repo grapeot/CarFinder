@@ -106,18 +106,15 @@ async def generate_images_task(task_id: str, feedback: str, state: dict):
         )
         
         plan_data = json.loads(response.text)
-        active_tasks[task_id]["status"] = "generating"
+        active_tasks[task_id]["status"] = "Generating designs..."
         active_tasks[task_id]["updated_state"] = plan_data["updated_state"]
         active_tasks[task_id]["round"] = state.get("round", 0) + 1
 
-        # 2. Sequential Image Generation (to respect rate limits/simple flow)
-        generated_images = []
+        # 2. Parallel Image Generation
         base_visual_prompt = "A photorealistic studio render of an unbranded concept car. Matte white automotive clay model, neutral gray cyclorama background, soft diffused studio lighting. Full vehicle in frame, front three-quarter left view at eye level, 50mm lens perspective, sharp focus. No logos, no text, exactly four wheels."
 
-        for i, item in enumerate(plan_data["plan"]):
+        async def generate_single_image(index, item):
             full_prompt = f"{base_visual_prompt} Design: {item['prompt']}"
-            
-            # Use gemini-2.5-flash-image for speed/cost in prototype
             img_response = await asyncio.to_thread(
                 client.models.generate_content,
                 model="gemini-2.5-flash-image",
@@ -130,19 +127,25 @@ async def generate_images_task(task_id: str, feedback: str, state: dict):
             for part in img_response.candidates[0].content.parts:
                 if part.inline_data:
                     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
-                    filename = f"{task_id}_{i}_{timestamp}.png"
+                    filename = f"{task_id}_{index}_{timestamp}.png"
                     filepath = os.path.join(IMAGE_DIR, filename)
                     with open(filepath, "wb") as f:
                         f.write(part.inline_data.data)
                     
-                    generated_images.append({
+                    return {
                         "name": item["name"],
                         "url": f"/api/images/{filename}",
                         "prompt": item["prompt"],
                         "type": item["type"]
-                    })
+                    }
+            return None
+
+        # Gather all 9 tasks concurrently
+        tasks = [generate_single_image(i, item) for i, item in enumerate(plan_data["plan"])]
+        results = await asyncio.gather(*tasks)
         
-        active_tasks[task_id]["images"] = generated_images
+        # Filter out any None results
+        active_tasks[task_id]["images"] = [r for r in results if r is not None]
         active_tasks[task_id]["status"] = "completed"
         await cleanup_images()
 
@@ -159,7 +162,7 @@ async def handle_feedback(req: FeedbackRequest, background_tasks: BackgroundTask
     active_tasks[task_id] = {
         "id": task_id,
         "round": req.state.get("round", 0),
-        "status": "queued",
+        "status": "Analyzing your feedback...",
         "images": [],
         "updated_state": req.state
     }

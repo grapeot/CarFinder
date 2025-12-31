@@ -126,7 +126,7 @@ const App = () => {
                 {currentView !== 'current' && <span style={{ color: 'var(--accent)', marginLeft: '10px' }}>(History)</span>}
               </div>
               <div className="grid">
-                {currentDisplayData.images.map((img, i) => (
+                {currentDisplayData.images?.map((img, i) => (
                   <div key={i} className={`card ${img.type}`}>
                     <div className="img-container">
                       <div className="type-tag">{img.type}</div>
@@ -227,10 +227,10 @@ const App = () => {
         <div className="status-overlay">
           <div className="loader"></div>
           <h2 style={{ letterSpacing: '2px', textTransform: 'uppercase', fontWeight: 300 }}>
-            {status?.status === 'planning' ? 'Thinking with Gemini 3 Flash...' : 'Rendering 9 Digital Prototypes...'}
+            {status?.status === 'completed' ? 'Finalizing...' : (status?.status || 'AI is thinking...')}
           </h2>
           <p style={{ color: 'var(--text-dim)' }}>
-            {status?.status === 'planning' ? 'The state machine is analyzing your feedback and planning mutations.' : 'Each image is being tailored to your design genome.'}
+            Synthesizing your design genome and rendering prototypes...
           </p>
         </div>
       )}
