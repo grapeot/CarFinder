@@ -357,3 +357,81 @@ textarea:focus {
   background: var(--accent);
   color: white;
 }
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 900px) {
+  .app-container {
+    padding: 0 20px;
+    height: auto;
+    overflow-x: hidden;
+  }
+
+  header {
+    padding: 20px 0;
+  }
+
+  .logo {
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+  }
+
+  .main-content {
+    flex-direction: column;
+    overflow: visible;
+    gap: 20px;
+  }
+
+  .discovery-pane {
+    overflow: visible;
+    padding-right: 0;
+  }
+
+  .sidebar {
+    order: 2;
+    /* Move DNA/History below current results */
+    overflow: visible;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .controls {
+    position: sticky;
+    bottom: 0;
+    background: var(--bg-color);
+    padding: 20px 0;
+    z-index: 100;
+    border-top: 1px solid var(--border);
+  }
+
+  textarea {
+    height: 70px;
+    padding: 15px 80px 15px 20px;
+    font-size: 0.9rem;
+  }
+
+  .btn-generate {
+    height: 70px;
+    width: 70px;
+    min-width: 70px;
+  }
+
+  .status-overlay {
+    bottom: 100px;
+    right: 20px;
+    left: 20px;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo {
+    font-size: 0.9rem;
+  }
+
+  .btn-new-session {
+    padding: 6px 12px;
+    font-size: 0.65rem;
+  }
+}
