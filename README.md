@@ -31,6 +31,17 @@ The system employs a "Feedback-Evolution-Exploration" cycle:
 - **Docker-Ready**: Optimized for deployment with a multi-stage Dockerfile and single-process/single-port configuration.
 - **Robustness**: Built-in **Exponential Backoff** retry logic to gracefully handle API rate limits and model overloads.
 
+## 🧠 Design Philosophy: Workflow over Plumbing
+
+Dream Car Finder is a showcase of the **AI Architect** mindset. By leveraging the comprehensive AI capabilities of [AI Builder Space](https://space.ai-builders.com), the project focuses entirely on designing high-value AI workflows rather than managing low-level infrastructure.
+
+Key AI orchestrations integrated via AI Builder Space:
+- **Strategic Reasoning**: Analyzing vague user feedback to synthesize a precise "Design Genome."
+- **Evolutionary Creativity**: Generating subsequent design iterations by cross-referencing user preferences with previous visual outputs.
+- **Multimodal Feedback**: Real-time voice-to-text transcription to lower the barrier for design iteration.
+
+By offloading the "plumbing" (authentication, model scaling, deployment) to the [AI Architect course](https://www.superlinear.academy/c/aa/)'s native ecosystem, the development energy was directed toward what matters most: **the active discovery loop and user experience.**
+
 ## 🛠️ Tech Stack
 
 - **Backend**: FastAPI (Python)
@@ -91,8 +102,6 @@ docker run -p 8000:8000 -e AI_BUILDER_TOKEN=your_token car-finder
 ```
 
 Access the UI at `http://localhost:8000`.
-
-Access the UI at `http://localhost:8002`.
 
 ## 📖 Documentation
 - [Workflow Design](docs/workflow.md): Detailed explanation of the active discovery loop (Chinese).
