@@ -11,7 +11,8 @@ import {
   XCircle,
   Lightbulb,
   User,
-  Square
+  Square,
+  Github
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
@@ -268,7 +269,7 @@ const App = () => {
     <div className="app-container">
       <header>
         <div className="logo">DREAM CAR<span>FINDER</span></div>
-        <div style={{ display: 'flex', gap: '15px' }}>
+        <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
           <button
             className="btn-new-session"
             onClick={() => {
@@ -286,6 +287,15 @@ const App = () => {
             <RotateCcw size={14} style={{ marginRight: '8px' }} />
             New Session
           </button>
+          <a
+            href="https://github.com/grapeot/CarFinder"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-github"
+            title="View on GitHub"
+          >
+            <Github size={18} />
+          </a>
         </div>
       </header>
 

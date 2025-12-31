@@ -447,6 +447,30 @@ textarea:focus {
   box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);
 }
 
+.btn-github {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  padding: 8px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  width: 36px;
+  height: 36px;
+}
+
+.btn-github:hover {
+  background: #222;
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 15px rgba(44, 107, 237, 0.2);
+  transform: scale(1.05);
+}
+
 .empty-state {
   flex: 1;
   display: flex;
