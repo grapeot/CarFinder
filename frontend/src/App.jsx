@@ -9,8 +9,10 @@ import {
   Dna,
   CheckCircle2,
   XCircle,
-  Lightbulb
+  Lightbulb,
+  User
 } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 
 const App = () => {
   const [feedback, setFeedback] = useState('');
@@ -23,6 +25,7 @@ const App = () => {
   // Real design state managed in browser
   const [designGenome, setDesignGenome] = useState({
     round: 0,
+    design_summary: '',
     confirmed_likes: [],
     hard_rejections: [],
     exploration_history: []
@@ -101,7 +104,7 @@ const App = () => {
               if (window.confirm("Are you sure you want to reset everything?")) {
                 setHistory([]);
                 setStatus(null);
-                setDesignGenome({ round: 0, confirmed_likes: [], hard_rejections: [], exploration_history: [] });
+                setDesignGenome({ round: 0, design_summary: '', confirmed_likes: [], hard_rejections: [], exploration_history: [] });
               }
             }}
           >
@@ -151,6 +154,18 @@ const App = () => {
         <div className="sidebar">
           <div className="sidebar-item">
             <div className="section-title"><Dna size={16} /> Design Genome</div>
+
+            {designGenome.design_summary && (
+              <div style={{ background: 'rgba(255,255,255,0.03)', padding: '15px', borderRadius: '12px', marginBottom: '20px', border: '1px solid var(--border)' }}>
+                <div style={{ fontSize: '0.7rem', color: 'var(--accent)', marginBottom: '8px', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                  <User size={10} style={{ marginRight: '5px' }} /> AI Summary
+                </div>
+                <div style={{ fontSize: '0.85rem', lineHeight: '1.6', color: '#ccc' }}>
+                  <ReactMarkdown>{designGenome.design_summary}</ReactMarkdown>
+                </div>
+              </div>
+            )}
+
             <div style={{ marginBottom: '15px' }}>
               <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginBottom: '5px' }}>LIKED ELEMENTS</div>
               <div className="tag-list">

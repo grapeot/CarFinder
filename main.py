@@ -71,26 +71,42 @@ async def generate_images_task(task_id: str, feedback: str, state: dict):
     try:
         # 1. Plan Next Round with Gemini 3 Flash Thinking
         prompt = f"""
-        You are the 'Design Genome Manager'. 
+        You are the 'Design Genome Manager & Strategist'. 
         Current User Design State: {json.dumps(state, indent=2)}
         User Feedback: "{feedback}"
         
         Task:
-        1. Update 'confirmed_likes' and 'hard_rejections' based on the feedback.
-        2. Plan 9 new car design prompts using the 7+2 Strategy:
-           - 7 EXPLOITATION Slots: Focus on merging 'confirmed_likes' and evolving favorite silhouettes.
-           - 2 EXPLORATION Slots: Generate 'crazy' speculative forms to test boundaries.
+        1. **Rectify & Update DNA**: 
+           - Update 'confirmed_likes' and 'hard_rejections' using the new feedback.
+           - CONSOLIDATE: Merge similar points to keep the list concise.
+           - RECTIFY: If new feedback contradicts previous DNA, prioritize the new feedback. 
+           - **NARRATIVE SUMMARY**: Create a 2-3 sentence 'design_summary' in Markdown that synthesizes the user's current 'Design Persona' (e.g., 'The Cyber-Minimalist').
+           - Ensure the DNA reflects the FULL history of the conversation, not just the last round.
+           
+        2. **Plan 9 Mutation Prompts (7+2 Strategy)**:
+           - 7 EXPLOITATION: Focus on precise combinations of 'confirmed_likes'. 
+             - Use 3 slots for 'Delta Mutations' of favorite images.
+             - Use 4 slots for 'Hybrid Species' (e.g. Muscle + Monolith).
+           - 2 EXPLORATION: 'Active Learning' wildcards. Test a boundary or try a geometry the user hasn't seen yet.
         
         Requirements:
         - Design language: Linear, Monolithic, Tech-focused.
         - Constraints: White clay model, unbranded, no wings, no traditional grilles.
-        - Respond ONLY with JSON in this format:
-          {{
-            "updated_state": {{...}},
-            "plan": [
-              {{"name": "unique_name", "prompt": "precise visual description", "type": "exploitation/exploration"}}
-            ]
-          }}
+        - Output Format: Respond ONLY with valid JSON.
+        
+        Example Output:
+        {{
+          "updated_state": {{
+            "round": {state.get('round', 0) + 1},
+            "design_summary": "Synthesized AI summary in Markdown...",
+            "confirmed_likes": ["Point 1", "Point 2"],
+            "hard_rejections": ["Point A", "Point B"],
+            "exploration_history": [...]
+          }},
+          "plan": [
+            {{"name": "unique_id", "prompt": "...", "type": "exploration/exploitation"}}
+          ]
+        }}
         """
         
         # Use Gemini 3 Flash with thinking and search
