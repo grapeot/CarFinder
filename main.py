@@ -82,10 +82,6 @@ async def cleanup_images():
         except Exception as e:
             print(f"Error deleting {files[i]}: {e}")
 
-# 故意破坏的代码 - 语法错误
-if True
-    print("This will break the build!")
-
 async def generate_images_task(task_id: str, feedback: str, state: dict):
     active_tasks[task_id]["status"] = "planning"
     try:
